@@ -41,8 +41,8 @@ pub mod pallet {
 		type LockedCurrency: LockableCurrency<Self::AccountId, Moment = Self::BlockNumber>;
 
 		// sudo like origin, could be single account or multi signed
-		/*#[pallet::constant]
-		type SpecialAccountId: Get<Self::AccountId>;*/
+		#[pallet::constant]
+		type SpecialAccountId: Get<Self::AccountId>;
 
 	}
 
@@ -129,7 +129,7 @@ pub mod pallet {
 		) -> DispatchResultWithPostInfo {
 			let user = ensure_signed(origin)?;
 			// ensure the caller of this dispatchable is of special account id
-			//ensure!(user == T::SpecialAccountId::get(), DispatchError::BadOrigin);
+			ensure!(user == T::SpecialAccountId::get(), DispatchError::BadOrigin);
 
 			T::LockedCurrency::set_lock(EXAMPLE_ID,
 					&user,
@@ -158,7 +158,7 @@ pub mod pallet {
 		) -> DispatchResultWithPostInfo {
 			let user = ensure_signed(origin)?;
 
-			//ensure!(user == T::SpecialAccountId::get(), DispatchError::BadOrigin);
+			ensure!(user == T::SpecialAccountId::get(), DispatchError::BadOrigin);
 
 			T::LockedCurrency::extend_lock(EXAMPLE_ID,
 						&user,
