@@ -145,6 +145,8 @@ pub mod pallet {
 		) -> 	DispatchResultWithPostInfo {
 			let user = ensure_signed(origin)?;
 
+			ensure!(user == T::SpecialAccountId::get(), DispatchError::BadOrigin);
+
 			T::LockedCurrency::remove_lock(EXAMPLE_ID, &user);
 
 			Self::deposit_event(Event::Unlocked(user));
