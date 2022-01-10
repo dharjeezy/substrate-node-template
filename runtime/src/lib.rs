@@ -257,6 +257,36 @@ impl pallet_balances::Config for Runtime {
 }
 
 parameter_types! {
+	pub const ReservationFee: u128 = 100;
+}
+
+impl pallet_nicks::Config for Runtime {
+	// The Balances pallet implements the ReservableCurrency trait.
+	// `Balances` is defined in `construct_runtime!` macro. See below.
+	// https://docs.substrate.io/rustdocs/latest/pallet_balances/index.html#implementations-2
+	type Currency = Balances;
+
+	// Use the NickReservationFee from the parameter_types block.
+	type ReservationFee = ReservationFee;
+
+	// No action is taken when deposits are forfeited.
+	type Slashed = ();
+
+	// Configure the FRAME System Root origin as the Nick pallet admin.
+	// https://docs.substrate.io/rustdocs/latest/frame_system/enum.RawOrigin.html#variant.Root
+	type ForceOrigin = frame_system::EnsureRoot<AccountId>;
+
+	// Use the MinNickLength from the parameter_types block.
+	type MinLength = frame_support::traits::ConstU32<8>;
+
+	// Use the MaxNickLength from the parameter_types block.
+	type MaxLength = frame_support::traits::ConstU32<32>;
+
+	// The ubiquitous event type.
+	type Event = Event;
+}
+
+parameter_types! {
 	pub const TransactionByteFee: Balance = 1;
 	pub OperationalFeeMultiplier: u8 = 5;
 }
@@ -292,6 +322,7 @@ construct_runtime!(
 		Aura: pallet_aura,
 		Grandpa: pallet_grandpa,
 		Balances: pallet_balances,
+		Nicks: pallet_nicks,
 		TransactionPayment: pallet_transaction_payment,
 		Sudo: pallet_sudo,
 		// Include the custom logic from the pallet-template in the runtime.
